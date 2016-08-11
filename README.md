@@ -1,4 +1,4 @@
-# ProTyper
+# ProTyper v .1
 
 
 _Simply be the best at typing_

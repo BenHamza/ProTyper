@@ -63,5 +63,5 @@ linear speed but as a real user type faster or slower. That's what the randomize
 
 
 ### Example Video
-<a href="https://www.youtube.com/embed/RMyX_jbNl2U" target="_blank"><img src="https://www.youtube.com/embed/RMyX_jbNl2U" 
+<a href="https://www.youtube.com/embed/RMyX_jbNl2U" target="_blank"><img src="https://i.ytimg.com/vi/RMyX_jbNl2U/1.jpg" 
 alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>

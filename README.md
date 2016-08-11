@@ -62,3 +62,6 @@ speed_randomize is probably very important. This randomizes the type speed. Beca
 linear speed but as a real user type faster or slower. That's what the randomizer is for. To stay under radar so to say and not be detected by anti-cheat.
 
 
+### Example Video
+<a href="https://www.youtube.com/embed/RMyX_jbNl2U" target="_blank"><img src="https://www.youtube.com/embed/RMyX_jbNl2U" 
+alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>

@@ -1,4 +1,4 @@
-# TypeIt v .11
+# TypeIt #2
 
 
 _Simply be the best at typing_

@@ -1,18 +1,12 @@
 import sys
+import time
 
 from PySide.QtCore import *
 from PySide.QtGui import *
 
 from GUI import protyper
 from auto_press import ProTyper
-
-
-
 from typeit_tray import TrayIcon
-import time
-
-
-
 
 
 class ExampleApp(QMainWindow, protyper.Ui_MainWindow):
@@ -22,22 +16,13 @@ class ExampleApp(QMainWindow, protyper.Ui_MainWindow):
         self.setupUi(self)
         self.installEventFilter(self)
 
-
         self.tray = TrayIcon()
-
-
-
-        # self.plainTextEdit.setGeometry(self.plainTextEdit.width(), 0 , self.plainTextEdit.width(), self.plainTextEdit.height())
 
         self.makeClickable(self.pix_key_text_3)
 
         QObject.connect(self.pix_key_text_3, SIGNAL("clicked()"), self.slide_up)
 
         self.scale_up(self.pix_key_text_3)
-
-
-
-
 
         # self.an = QPropertyAnimation(self.pix_key, "pos")
         # self.an.setDuration(1500)
@@ -56,19 +41,15 @@ class ExampleApp(QMainWindow, protyper.Ui_MainWindow):
         # self.anim_group.start()
         # self.ag.finished.connect(self.pixmap_splash.deleteLater)
 
-
-
     def start(self):
         self.showMinimized()
-        for x in range(3,0,-1):
-
-            self.tray.showMessage('Get Ready', 'Autotype will start in ' + str(x) +  ' seconds.',
+        for x in range(3, 0, -1):
+            self.tray.showMessage('Get Ready', 'Autotype will start in ' + str(x) + ' seconds.',
                                   self.tray.Information, 100)
             time.sleep(1)
 
         p = ProTyper(self.read_plain(), 0, 0.001, 0)
         p.start_auto_type()
-
 
     def read_plain(self):
         return self.plain_text.toPlainText()
@@ -176,11 +157,8 @@ def main():
     form = ExampleApp()
     form.show()
 
-
-
     app.exec_()
 
 
 if __name__ == '__main__':
     main()
-    # MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)

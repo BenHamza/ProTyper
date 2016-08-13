@@ -1,5 +1,3 @@
-import sys
-
 from PySide import QtGui, QtCore
 
 
@@ -8,9 +6,11 @@ class TrayMenu(QtGui.QWidget):
         super(TrayMenu, self).__init__()
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint)
-        self.setGeometry(300, 300, 250, 150)
+        self.setGeometry(100, 100, 650, 650)
 
         self.button = QtGui.QPushButton('Test')
+        self.button1 = QtGui.QPushButton('Test')
+        self.button2 = QtGui.QPushButton('Test')
 
     def focusInEvent(self, event):
         self.activateWindow()
@@ -23,23 +23,17 @@ class TrayIcon(QtGui.QSystemTrayIcon):
     def __init__(self):
         super(TrayIcon, self).__init__()
         self.menu = TrayMenu()
-        self.activated.connect(self.activateTrayMenu)
+        self.activated.connect(self.activate_tray_menu)
         self.setIcon(QtGui.QIcon('key.png'))
         self.show()
 
-    def activateTrayMenu(self, reason):
+    def activate_tray_menu(self, reason):
         if reason is QtGui.QSystemTrayIcon.Context:
-            self.customMenu()
+            self.custom_menu()
 
-    def customMenu(self):
+    def custom_menu(self):
         pos = self.geometry().topRight()
         x, y = pos.x() - self.menu.width() / 2, pos.y() - self.menu.height()
         self.menu.move(x, y)
         self.menu.show()
         self.menu.setFocus()
-
-
-def main():
-    app = QtGui.QApplication(sys.argv)
-    tray = TrayIcon()
-    sys.exit(app.exec_())

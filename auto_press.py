@@ -4,12 +4,7 @@ import time
 
 import pyautogui
 import sys
-import selenium
 
-from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
-from selenium.webdriver.support import expected_conditions as EC # available since 2.
 
 class ProTyper:
     def __init__(self, lesson, exercise, type_speed=0.1, type_speed_randomize=0.1):
@@ -19,6 +14,7 @@ class ProTyper:
         self.type_speed = type_speed
         self.type_speed_randomize = type_speed_randomize
         self.driver = None
+        self.is_file = False
 
     @staticmethod
     def json_read(filename=''):
@@ -43,7 +39,9 @@ class ProTyper:
 
         return chain_data
 
-    def execute_chain(self):
+
+
+    def execute_chain_from_json(self):
         """ presses on keyes retrieved from json data with given speed."""
         # read complete document with all key chains
         chain = self.json_read('document')
@@ -64,9 +62,32 @@ class ProTyper:
 
             # never drop below or equal to zero
             if r <= 0:
-                r = 0.1
+                continue
             # delay before next key press
             time.sleep(r)
+
+    def execute_chain(self):
+        """ presses on keyes retrieved from json data with given speed."""
+        chain = self.lesson
+        print 'Keys to Press: ' + chain
+
+        # shows all pressed keys
+        print 'Keys Pressed: ',
+
+        # retrieve current lessons and exercise keychain
+        for key in chain:
+            print key,
+            # press on current key
+            pyautogui.press(key)
+            # calculate sleep time based on speed and a randomise factor
+            r = random.uniform(self.type_speed - self.type_speed_randomize, self.type_speed + self.type_speed_randomize)
+
+            # never drop below or equal to zero
+            if r <= 0:
+                continue
+            # delay before next key press
+            time.sleep(r)
+
 
     def execute_chain_fake(self):
         """
@@ -112,8 +133,10 @@ class ProTyper:
             # delay before next key press
             time.sleep(r)
 
+    # obsolete : Function has been transported to GUI
     def start_auto_type(self):
         """ counts down before starting auto typing. """
+        """
         # Be prepared call to user
         print '\n\nGet Ready!'
         print '-----------------------------------------------\n'
@@ -126,9 +149,12 @@ class ProTyper:
 
         # prints a new line
         print '\n'
-
-        # starts typing
-        self.execute_chain()
+        """
+        if self.is_file:
+            # starts typing
+            self.execute_chain_from_json()
+        else:
+            self.execute_chain()
 """
     def navigate_page(self):
         # Create a new instance of the Firefox driver
@@ -145,12 +171,9 @@ class ProTyper:
         self.driver.find_element_by_class_name('navAnew').click()
 """
 
-def init(*args,**kwargs):
+def perform_chain(*args,**kwargs):
     pro_typer = ProTyper(args[0], args[1], args[2], args[3])
+    pro_typer.is_file = True
     pro_typer.start_auto_type()
-
-#if __name__ == '__main__':
-    #pro_typer = ProTyper('lesson_1', 0, 0.01, 0.0)
-    #pro_typer.start_auto_type()
 
 exec(''.join(sys.argv[1:]))

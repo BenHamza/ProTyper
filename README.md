@@ -1,4 +1,4 @@
-# ProTyper v .1
+# TypeIt v .11
 
 
 _Simply be the best at typing_

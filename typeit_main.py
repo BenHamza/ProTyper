@@ -18,6 +18,14 @@ class ExampleApp(QMainWindow, protyper.Ui_MainWindow):
 
         self.tray = TrayIcon()
 
+
+
+
+
+
+
+
+
         self.makeClickable(self.pix_key_text_3)
 
         QObject.connect(self.pix_key_text_3, SIGNAL("clicked()"), self.slide_up)

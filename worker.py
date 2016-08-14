@@ -31,6 +31,7 @@ class TypeItWorker(QThread):
         if p.start_auto_type():
             self.tray.showMessage('Task Completed :D', 'All keys has been pressed.',
                                   self.tray.Information, 1)
+            
 
         self.finished.emit(ResultObj('show'))
 

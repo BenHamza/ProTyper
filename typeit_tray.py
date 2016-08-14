@@ -1,5 +1,8 @@
+from lib2to3.pgen2.tokenize import generate_tokens
+
 from PySide.QtCore import *
 from PySide.QtGui import *
+
 
 class TrayMenu(QWidget):
     def __init__(self):
@@ -21,13 +24,16 @@ class TrayMenu(QWidget):
         self.tray.show()
 
     def open(self):
-        print 'open'
+        pass
+        #get_ui_manager().showNormal()
 
     def stop_auto_type(self):
-        print 'autotype stopped'
+        pass
+        #get_ui_manager().typeit_thread.stop()
 
     def close(self):
-        print 'close'
+        from typeit_main import get_ui_manager
+        get_ui_manager().close()
 
     def createActions(self):
         self.open_act = QAction('Open TypeIt', self,
@@ -50,14 +56,12 @@ class TrayMenu(QWidget):
     def focusOutEvent(self, event):
         self.hide()
 
-    def print1(self):
-        'LALALALA'
-
 
 class TrayIcon(QSystemTrayIcon):
     def __init__(self):
         super(TrayIcon, self).__init__()
         self.menu = TrayMenu()
+        self.setIcon(QIcon('key.png'))
         self.activated.connect(self.activate_tray_menu)
         self.show()
 

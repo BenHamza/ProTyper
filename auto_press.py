@@ -65,6 +65,7 @@ class ProTyper:
                 continue
             # delay before next key press
             time.sleep(r)
+        return True
 
     def execute_chain(self):
         """ presses on keyes retrieved from json data with given speed."""
@@ -87,6 +88,8 @@ class ProTyper:
                 continue
             # delay before next key press
             time.sleep(r)
+
+        return True
 
 
     def execute_chain_fake(self):
@@ -152,9 +155,9 @@ class ProTyper:
         """
         if self.is_file:
             # starts typing
-            self.execute_chain_from_json()
+            return self.execute_chain_from_json()
         else:
-            self.execute_chain()
+            return self.execute_chain()
 """
     def navigate_page(self):
         # Create a new instance of the Firefox driver

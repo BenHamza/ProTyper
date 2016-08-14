@@ -7,55 +7,54 @@ from worker import TypeItWorker
 
 from GUI import protyper
 from typeit_tray import TrayIcon
+import Queue as queue
 
 
 class MainApp(QMainWindow, protyper.Ui_MainWindow):
-    _instance = None
-    _initialized = False
-
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super(MainApp, cls).__new__(cls)
-        return cls._instance
-
     def __init__(self, parent=None):
-        if not self._initialized:
-            super(MainApp, self).__init__(parent)
-            self.setWindowFlags(Qt.FramelessWindowHint | Qt.Dialog)
-            self.setupUi(self)
-            self.installEventFilter(self)
+        super(MainApp, self).__init__(parent)
+        self.setWindowFlags(Qt.FramelessWindowHint | Qt.Dialog)
+        self.setupUi(self)
+        self.installEventFilter(self)
 
-            self.tray = TrayIcon()
-            self.typeit_thread = None
+        self.tray = TrayIcon()
+        self.typeit_thread = None
 
-            self.makeClickable(self.pix_key_text_3)
+        self.makeClickable(self.pix_key_text_3)
 
-            QObject.connect(self.pix_key_text_3, SIGNAL("clicked()"), self.slide_up)
+        QObject.connect(self.pix_key_text_3, SIGNAL("clicked()"), self.slide_up)
 
-            self.scale_up(self.pix_key_text_3)
+        self.scale_up(self.pix_key_text_3)
 
-            self._initialized = True
 
-            # self.an = QPropertyAnimation(self.pix_key, "pos")
-            # self.an.setDuration(1500)
-            # self.an.setStartValue(self.pix_key)
-            # self.an.setEndValue(self.plainTextEdit.pos())
+        # self.an = QPropertyAnimation(self.pix_key, "pos")
+        # self.an.setDuration(1500)
+        # self.an.setStartValue(self.pix_key)
+        # self.an.setEndValue(self.plainTextEdit.pos())
 
-            # self.an.start()
-            # Declare graphics effect for splash fade_out
-            # self.effect = QGraphicsOpacityEffect()
-            # self.pix_key.setGraphicsEffect(self.effect)
-            # QGraphicsOpacityEffect.setOpacity(self.effect, 1)
+        # self.an.start()
+        # Declare graphics effect for splash fade_out
+        # self.effect = QGraphicsOpacityEffect()
+        # self.pix_key.setGraphicsEffect(self.effect)
+        # QGraphicsOpacityEffect.setOpacity(self.effect, 1)
 
-            # self.anim_group = QSequentialAnimationGroup()
-            # self.anim_group.addPause(200)
-            # self.anim_group.addAnimation(self.fade_out(self.effect, 200))
-            # self.anim_group.start()
-            # self.ag.finished.connect(self.pixmap_splash.deleteLater)
+        # self.anim_group = QSequentialAnimationGroup()
+        # self.anim_group.addPause(200)
+        # self.anim_group.addAnimation(self.fade_out(self.effect, 200))
+        # self.anim_group.start()
+        # self.ag.finished.connect(self.pixmap_splash.deleteLater)
+
+    def handle_result(self, result):
+        val = result.val
+        if val == 'show':
+            self.showNormal()
+        print("got val {}".format(val))
+        # You can update the UI from here.
 
     def start(self):
+        self.queue = queue.Queue()
         self.showMinimized()
-        self.typeit_thread = TypeItWorker(self.read_plain(), self.tray)
+        self.typeit_thread = TypeItWorker(self.read_plain(), self.tray, self.queue, self.handle_result)
         self.typeit_thread.start()
 
 
@@ -141,6 +140,8 @@ class MainApp(QMainWindow, protyper.Ui_MainWindow):
                 self.slide_left()
             if key == Qt.Key_F12:
                 self.start()
+            if key == QKeySequence.Quit:
+                self.typeit_thread.stop()
                 # else:
                 # if key == Qt.Key_Return:
                 # self.edit.setText('return')
@@ -160,12 +161,21 @@ class MainApp(QMainWindow, protyper.Ui_MainWindow):
             self.move(event.globalPos() - self.dragPosition)
             event.accept()
 
+    def closeEvent(self, event):
+        self.tray = None
+        self.close()
+
+
+#__MY_SINGLETON = MainApp()
+
+#def get_ui_manager():
+    #return __MY_SINGLETON
+
 
 def main():
     app = QApplication(sys.argv)
     form = MainApp()
     form.show()
-
     app.exec_()
 
 

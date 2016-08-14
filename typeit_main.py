@@ -3,53 +3,62 @@ import time
 
 from PySide.QtCore import *
 from PySide.QtGui import *
+from worker import TypeItWorker
 
 from GUI import protyper
-from auto_press import ProTyper
 from typeit_tray import TrayIcon
 
 
-class ExampleApp(QMainWindow, protyper.Ui_MainWindow):
+class MainApp(QMainWindow, protyper.Ui_MainWindow):
+    _instance = None
+    _initialized = False
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(MainApp, cls).__new__(cls)
+        return cls._instance
+
     def __init__(self, parent=None):
-        super(ExampleApp, self).__init__(parent)
-        self.setWindowFlags(Qt.FramelessWindowHint | Qt.Dialog)
-        self.setupUi(self)
-        self.installEventFilter(self)
+        if not self._initialized:
+            super(MainApp, self).__init__(parent)
+            self.setWindowFlags(Qt.FramelessWindowHint | Qt.Dialog)
+            self.setupUi(self)
+            self.installEventFilter(self)
 
-        self.tray = TrayIcon()
+            self.tray = TrayIcon()
+            self.typeit_thread = None
 
-        self.makeClickable(self.pix_key_text_3)
+            self.makeClickable(self.pix_key_text_3)
 
-        QObject.connect(self.pix_key_text_3, SIGNAL("clicked()"), self.slide_up)
+            QObject.connect(self.pix_key_text_3, SIGNAL("clicked()"), self.slide_up)
 
-        self.scale_up(self.pix_key_text_3)
+            self.scale_up(self.pix_key_text_3)
 
-        # self.an = QPropertyAnimation(self.pix_key, "pos")
-        # self.an.setDuration(1500)
-        # self.an.setStartValue(self.pix_key)
-        # self.an.setEndValue(self.plainTextEdit.pos())
+            self._initialized = True
 
-        # self.an.start()
-        # Declare graphics effect for splash fade_out
-        # self.effect = QGraphicsOpacityEffect()
-        # self.pix_key.setGraphicsEffect(self.effect)
-        # QGraphicsOpacityEffect.setOpacity(self.effect, 1)
+            # self.an = QPropertyAnimation(self.pix_key, "pos")
+            # self.an.setDuration(1500)
+            # self.an.setStartValue(self.pix_key)
+            # self.an.setEndValue(self.plainTextEdit.pos())
 
-        # self.anim_group = QSequentialAnimationGroup()
-        # self.anim_group.addPause(200)
-        # self.anim_group.addAnimation(self.fade_out(self.effect, 200))
-        # self.anim_group.start()
-        # self.ag.finished.connect(self.pixmap_splash.deleteLater)
+            # self.an.start()
+            # Declare graphics effect for splash fade_out
+            # self.effect = QGraphicsOpacityEffect()
+            # self.pix_key.setGraphicsEffect(self.effect)
+            # QGraphicsOpacityEffect.setOpacity(self.effect, 1)
+
+            # self.anim_group = QSequentialAnimationGroup()
+            # self.anim_group.addPause(200)
+            # self.anim_group.addAnimation(self.fade_out(self.effect, 200))
+            # self.anim_group.start()
+            # self.ag.finished.connect(self.pixmap_splash.deleteLater)
 
     def start(self):
         self.showMinimized()
-        for x in range(3, 0, -1):
-            self.tray.showMessage('Get Ready', 'Autotype will start in ' + str(x) + ' seconds.',
-                                  self.tray.Information, 100)
-            time.sleep(1)
+        self.typeit_thread = TypeItWorker(self.read_plain(), self.tray)
+        self.typeit_thread.start()
 
-        p = ProTyper(self.read_plain(), 0, 0.001, 0)
-        p.start_auto_type()
+
 
     def read_plain(self):
         return self.plain_text.toPlainText()
@@ -154,7 +163,7 @@ class ExampleApp(QMainWindow, protyper.Ui_MainWindow):
 
 def main():
     app = QApplication(sys.argv)
-    form = ExampleApp()
+    form = MainApp()
     form.show()
 
     app.exec_()

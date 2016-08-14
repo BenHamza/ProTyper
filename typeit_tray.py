@@ -1,7 +1,6 @@
 from PySide.QtCore import *
 from PySide.QtGui import *
 
-
 class TrayMenu(QWidget):
     def __init__(self):
         super(TrayMenu, self).__init__()
@@ -14,29 +13,36 @@ class TrayMenu(QWidget):
 
     def populate_context(self):
         self.menu = QMenu()
-        self.menu = QMenu(self)
         self.menu.addAction(self.open_act)
+        self.menu.addAction(self.stop_act)
         self.menu.addSeparator()
         self.menu.addAction(self.close_act)
         self.tray.setContextMenu(self.menu)
         self.tray.show()
 
-    def close(self):
-        self.close()
-
     def open(self):
-        self.close()
+        print 'open'
+
+    def stop_auto_type(self):
+        print 'autotype stopped'
+
+    def close(self):
+        print 'close'
 
     def createActions(self):
         self.open_act = QAction('Open TypeIt', self,
-                                shortcut=QKeySequence.Cut,
                                 statusTip="Cut the current selection's contents to the clipboard",
                                 triggered=self.open)
 
         self.close_act = QAction("Close TypeIt", self,
-                                 shortcut=QKeySequence.Copy,
                                  statusTip="Copy the current selection's contents to the clipboard",
                                  triggered=self.close)
+
+        self.stop_act = QAction('Stop Typing..', self,
+                                shortcut= QKeySequence('Ctrl+Q'),
+                                statusTip="Cut the current selection's contents to the clipboard",
+                                triggered=self.stop_auto_type)
+
 
     def focusInEvent(self, event):
         self.activateWindow()

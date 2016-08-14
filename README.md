@@ -1,4 +1,4 @@
-# TypeIt #3
+# TypeIt #4
 
 
 _Simply be the best at typing_
@@ -6,8 +6,8 @@ _Simply be the best at typing_
 ---
 
 
-With Protyper you will be able to automatically press on keys and simulate a real user. It is primarily designed for "Type skill" programs.
-For example open this link [Ratatype](http://www.ratatype.com/) and follow the example below
+With TypeIt you will be able to automatically press on keys and simulate a real user. It is primarily designed for "Type skill" programs. Yet it is useful for other things as well.
+For example open this link [Ratatype](http://www.ratatype.com/), copy paste the text onto TypeIt UI, then press F12 and see magic happen :D
 
 ---
 
